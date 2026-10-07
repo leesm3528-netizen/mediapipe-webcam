@@ -1,11 +1,67 @@
 # MediaPipe Webcam Demos
 
-[MediaPipe Tasks](https://ai.google.dev/edge/mediapipe/solutions/guide) 기반 실시간 웹캠 데모 (Python + OpenCV).
+[MediaPipe Tasks](https://ai.google.dev/edge/mediapipe/solutions/guide) 기반 실시간 웹캠 데모 (Python + OpenCV), 나만의 제스처 학습, 브라우저 데모.
 
-| 스크립트 | 기능 |
+**웹 데모: https://leesm3528-netizen.github.io/mediapipe-webcam/**
+
+| 파일 | 기능 |
 | --- | --- |
 | `hand_landmarker_webcam.py` | 손 21개 랜드마크 + 왼손/오른손 표시 |
-| `gesture_face_webcam.py` | 제스처 인식 + 얼굴 478개 랜드마크 + 표정(blendshape) 상위 5개 |
+| `gesture_face_webcam.py` | 기본 제스처 인식 + 얼굴 478개 랜드마크 + 표정(blendshape) 상위 5개 |
+| `gesture_studio.py` | 나만의 제스처 수집 → 학습 → 인식 UI 앱 |
+| `collect_gestures.py` / `train_gestures.py` / `custom_gesture_webcam.py` | 같은 과정을 터미널로 |
+| `web/` | 학습한 모델로 제스처별 이모지·로고를 띄우는 브라우저 데모 (GitHub Pages 배포) |
+| `export_model_web.py` / `serve_web.py` | 모델을 `web/model.json`으로 내보내기 / 로컬 웹 서버 |
+| `download_models.py` | MediaPipe `.task` 모델 다운로드 |
+
+## 작업 기록: 2026-10-07
+
+### 1. MediaPipe 웹캠 데모 (커밋 `09ff333`)
+- Hand Landmarker 문서의 공식 모델(`hand_landmarker.task`)과 `mediapipe` 1.1.0, `opencv-python`으로 웹캠 손 랜드마크 데모를 만들었습니다.
+- Gesture Recognizer + Face Landmarker를 한 화면에 띄우는 데모를 추가했습니다.
+- 웹캠이 안 켜지던 원인은 **파이썬이 두 개 설치되어 있던 것**이었습니다. 3.14.6에만 패키지가 있고, 새로 설치된 3.14.8에는 없었습니다. 양쪽 모두에 설치해서 해결했습니다.
+
+### 2. 나만의 제스처 학습 (커밋 `a797ea7`)
+- **방식**: HandLandmarker의 3D world 랜드마크 21개를 아래처럼 정규화해서 63차원 특징 벡터로 만들고, scikit-learn MLP로 분류합니다.
+  - 손목을 원점으로 옮깁니다.
+  - 왼손은 좌우를 뒤집어 한 모델로 양손을 처리합니다.
+  - 손목에서 가장 먼 관절까지의 거리가 1이 되게 크기를 맞춥니다.
+- **도구**: `gesture_studio.py` (Tkinter UI)로 수집, 학습, 인식을 한 창에서 합니다.
+- **학습 데이터** (`data/gestures.csv`, 저장소에는 포함하지 않음):
+
+  | 제스처 | 샘플 수 |
+  | --- | --- |
+  | `Heart` | 300 |
+  | `Nike` | 300 |
+  | `ok` | 300 |
+  | `ㅗ` | 300 |
+  | **합계** | **1,200** |
+
+- **모델**: MLP `63 → 64 → 32 → 4` (ReLU, softmax), 학습/테스트 80:20 분할 (stratified, `random_state=42`)
+- **결과**: 테스트 정확도 **97.1%** (240개 중 233개)
+
+  | 제스처 | precision | recall | f1 |
+  | --- | --- | --- | --- |
+  | Heart | 1.000 | 0.967 | 0.983 |
+  | Nike | 0.952 | 0.983 | 0.967 |
+  | ok | 0.983 | 0.983 | 0.983 |
+  | ㅗ | 0.950 | 0.950 | 0.950 |
+
+- **한계**: `none`(아무 제스처도 아닌 손) 클래스가 없어서, 평범한 손도 4개 중 하나로 분류될 수 있습니다. 지금은 확률 기준값(기본 0.8)으로 거르고 있고, `none`을 수집해서 다시 학습하는 것이 다음 개선 과제입니다.
+
+### 3. 웹 데모 + GitHub Pages 배포 (커밋 `a797ea7`, `9559d21`)
+- 학습한 MLP 가중치를 `web/model.json`으로 내보내고, 브라우저에서 MediaPipe JS(`@mediapipe/tasks-vision` 1.1.0)와 같은 특징 추출·추론을 그대로 구현했습니다. 파이썬과 확률이 소수점 4자리까지 같은 것을 확인했습니다.
+- 제스처별 효과: Nike → 스우시 로고, ok → 👌, Heart → 하트가 화면 앞으로 연속 발사, ㅗ → 🖕
+- `web/`을 GitHub Actions(`.github/workflows/pages.yml`)로 GitHub Pages에 자동 배포합니다.
+
+### 4. PowerShell 단축 명령 (로컬 PC 설정, 저장소에는 포함하지 않음)
+`$PROFILE`에 등록해서 어느 폴더에서나 쓸 수 있습니다.
+
+| 명령 | 동작 |
+| --- | --- |
+| `studio` (`gesture-studio`) | Gesture Studio 실행 |
+| `web` (`gesture-web`) | 모델이 바뀌었으면 다시 내보내고 → 로컬 서버를 켜고 → 브라우저 열기 |
+| `gesture-web-stop` | 로컬 웹 서버 종료 |
 
 ## 설치
 
