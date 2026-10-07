@@ -2,3 +2,6 @@ __pycache__/
 *.pyc
 .venv/
 models/*.task
+models/*.joblib
+data/
+web/nike.png
