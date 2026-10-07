@@ -1,0 +1,50 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Gesture Emoji</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <header>
+    <h1>Gesture Emoji</h1>
+    <p>Nike · ok · Heart · ㅗ 제스처를 해 보세요</p>
+  </header>
+
+  <main>
+    <div class="stage">
+      <video id="video" playsinline muted></video>
+      <canvas id="canvas"></canvas>
+      <div id="overlay"></div>
+      <div id="loading">모델 불러오는 중...</div>
+    </div>
+
+    <aside class="panel">
+      <div class="current">
+        <span class="caption">인식 결과</span>
+        <strong id="label">-</strong>
+      </div>
+
+      <label class="slider">
+        <span>인식 기준 확률 <b id="thresholdValue">0.80</b></span>
+        <input id="threshold" type="range" min="0.5" max="0.99" step="0.01" value="0.8">
+      </label>
+
+      <div id="bars"></div>
+
+      <label class="check"><input id="showSkeleton" type="checkbox" checked> 손 관절 표시</label>
+      <p class="status" id="status"></p>
+    </aside>
+  </main>
+
+  <template id="nike-logo">
+    <!-- Simple swoosh-style mark. Drop a nike.png next to this file to use your own image instead. -->
+    <svg viewBox="0 0 200 80" class="logo" aria-label="Nike">
+      <path d="M8 58 C 2 72, 18 78, 40 70 L 196 10 L 52 54 C 30 61, 18 58, 22 44 C 12 50, 9 54, 8 58 Z" fill="currentColor"/>
+    </svg>
+  </template>
+
+  <script type="module" src="app.js"></script>
+</body>
+</html>
