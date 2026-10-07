@@ -64,6 +64,9 @@ python custom_gesture_webcam.py [--threshold 0.7]
 
 학습한 모델을 브라우저에서 실행해서, 인식된 제스처 위치에 스티커를 띄웁니다.
 
+**배포 주소: https://leesm3528-netizen.github.io/mediapipe-webcam/**
+(`web/` 이 바뀌어 main에 푸시되면 GitHub Actions가 자동으로 다시 배포합니다. 재학습 후에는 `python export_model_web.py` 로 `web/model.json` 을 갱신해서 커밋하세요.)
+
 | 제스처 라벨 | 표시 |
 | --- | --- |
 | `Nike` | Nike 스우시 로고 (`web/nike.png` 를 넣으면 그 이미지 사용) |
