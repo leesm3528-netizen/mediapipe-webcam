@@ -3,6 +3,7 @@
 [MediaPipe Tasks](https://ai.google.dev/edge/mediapipe/solutions/guide) 기반 실시간 웹캠 데모 (Python + OpenCV), 나만의 제스처 학습, 브라우저 데모.
 
 **웹 데모: https://leesm3528-netizen.github.io/mediapipe-webcam/**
+· 만들 때 사용한 프롬프트: [PROMPTS.md](PROMPTS.md)
 
 | 파일 | 기능 |
 | --- | --- |
