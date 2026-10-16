@@ -52,7 +52,7 @@
 
 ### 3. 웹 데모 + GitHub Pages 배포 (커밋 `a797ea7`, `9559d21`)
 - 학습한 MLP 가중치를 `web/model.json`으로 내보내고, 브라우저에서 MediaPipe JS(`@mediapipe/tasks-vision` 1.1.0)와 같은 특징 추출·추론을 그대로 구현했습니다. 파이썬과 확률이 소수점 4자리까지 같은 것을 확인했습니다.
-- 제스처별 효과: Nike → 스우시 로고, ok → 👌, Heart → 하트가 화면 앞으로 연속 발사, ㅗ → 🖕
+- 제스처별 효과: Nike → 스우시 로고, ok → 👌, Heart → 하트가 화면 앞으로 연속 발사
 - `web/`을 GitHub Actions(`.github/workflows/pages.yml`)로 GitHub Pages에 자동 배포합니다.
 
 ### 4. PowerShell 단축 명령 (로컬 PC 설정, 저장소에는 포함하지 않음)
@@ -129,7 +129,6 @@ python custom_gesture_webcam.py [--threshold 0.7]
 | `Nike` | Nike 스우시 로고 (`web/nike.png` 를 넣으면 그 이미지 사용) |
 | `ok` | 👌 |
 | `Heart` | ❤️ 하트가 손에서 화면 앞으로 연속 발사 |
-| `ㅗ` | 🖕 |
 
 ```bash
 python export_model_web.py   # models/custom_gesture.joblib -> web/model.json (재학습할 때마다 실행)

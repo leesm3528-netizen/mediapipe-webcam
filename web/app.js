@@ -39,8 +39,6 @@ function stickerContent(label) {
       return "👌";
     case "heart":
       return "❤️";
-    case "ㅗ":
-      return "🖕";
     default:
       return null;
   }
